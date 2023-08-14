@@ -56,6 +56,7 @@ Export('env', 'zmq', 'arch', 'common')
 envCython = env.Clone()
 envCython["CPPPATH"] += [np.get_include()]
 envCython["CCFLAGS"] += ["-Wno-#warnings", "-Wno-shadow", "-Wno-deprecated-declarations"]
+envCython["CCFLAGS"].remove("-Werror")
 
 python_libs = []
 if arch == "Darwin":
