@@ -10,7 +10,7 @@ cereal_dir = Dir('.')
 
 python_path = sysconfig.get_paths()['include']
 cpppath = [
-  "can",
+  '#',
   '/usr/lib/include',
   python_path
 ]
@@ -41,7 +41,7 @@ env = Environment(
   LDFLAGS=ldflags_asan,
   LINKFLAGS=ldflags_asan,
   LIBPATH=[
-    "can/",
+    "#opendbc/can/",
   ],
   CFLAGS="-std=gnu11",
   CXXFLAGS=["-std=c++1z"],
@@ -52,6 +52,11 @@ env = Environment(
 
 common = ''
 Export('env', 'zmq', 'arch', 'common')
+
+cereal = [File('#cereal/libcereal.a')]
+messaging = [File('#cereal/libmessaging.a')]
+Export('cereal', 'messaging')
+
 
 envCython = env.Clone()
 envCython["CPPPATH"] += [np.get_include()]
@@ -72,4 +77,6 @@ envCython["LIBS"] = python_libs
 
 Export('envCython')
 
-SConscript(['can/SConscript'])
+
+SConscript(['cereal/SConscript'])
+SConscript(['opendbc/can/SConscript'])

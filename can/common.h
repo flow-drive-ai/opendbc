@@ -10,10 +10,10 @@
 #include <capnp/serialize.h>
 
 #ifndef DYNAMIC_CAPNP
-#include "msg.capnp.h"
+#include "cereal/gen/cpp/log.capnp.h"
 #endif
 
-#include "common_dbc.h"
+#include "opendbc/can/common_dbc.h"
 
 #define INFO printf
 #define WARN printf
@@ -81,7 +81,7 @@ public:
   #ifndef DYNAMIC_CAPNP
   void update_string(const std::string &data, bool sendcan);
   void update_strings(const std::vector<std::string> &data, std::vector<SignalValue> &vals, bool sendcan);
-  void UpdateCans(uint64_t sec, const capnp::List<CanData>::Reader& cans);
+  void UpdateCans(uint64_t sec, const capnp::List<cereal::CanData>::Reader& cans);
   #endif
   void UpdateCans(uint64_t sec, const capnp::DynamicStruct::Reader& cans);
   void UpdateValid(uint64_t sec);

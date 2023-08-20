@@ -8,9 +8,8 @@
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-#include "common.h"
-#include "msg.capnp.h"
-
+#include "cereal/logger/logger.h"
+#include "opendbc/can/common.h"
 
 int64_t get_raw_value(const std::vector<uint8_t> &msg, const Signal &sig) {
   int64_t ret = 0;
@@ -172,7 +171,7 @@ void CANParser::update_string(const std::string &data, bool sendcan) {
 
   // extract the messages
   capnp::FlatArrayMessageReader cmsg(aligned_buf.slice(0, buf_size));
-  Event::Reader event = cmsg.getRoot<Event>();
+  cereal::Event::Reader event = cmsg.getRoot<cereal::Event>();
 
   if (first_sec == 0) {
     first_sec = event.getLogMonoTime();
@@ -196,7 +195,7 @@ void CANParser::update_strings(const std::vector<std::string> &data, std::vector
   query_latest(vals, current_sec);
 }
 
-void CANParser::UpdateCans(uint64_t sec, const capnp::List<CanData>::Reader& cans) {
+void CANParser::UpdateCans(uint64_t sec, const capnp::List<cereal::CanData>::Reader& cans) {
   //DEBUG("got %d messages\n", cans.size());
 
   bool bus_empty = true;
@@ -242,7 +241,7 @@ void CANParser::UpdateCans(uint64_t sec, const capnp::List<CanData>::Reader& can
 #endif
 
 void CANParser::UpdateCans(uint64_t sec, const capnp::DynamicStruct::Reader& cmsg) {
-  // assume message struct is `CanData` and parse
+  // assume message struct is `cereal::CanData` and parse
   assert(cmsg.has("address") && cmsg.has("src") && cmsg.has("dat") && cmsg.has("busTime"));
 
   if (cmsg.get("src").as<uint8_t>() != bus) {
