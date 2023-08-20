@@ -9,7 +9,7 @@ from opendbc.can.tests import TEST_DBC
 
 
 # Python implementation so we don't have to depend on boardd
-def can_list_to_can_capnp(can_msgs, msgtype='can'):
+def can_list_to_can_capnp(can_msgs, msgtype='can', logMonoTime=None):
   dat = log.Event.new_message()
   dat.init(msgtype, len(can_msgs))
 
